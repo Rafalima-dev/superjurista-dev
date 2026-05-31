@@ -20,7 +20,7 @@ allowed-tools: Read Write Bash Glob AskUserQuestion TodoWrite
 <proposito>
   <objetivo>Transformar ideia bruta de sistema em blueprint executável com arquitetura completa: agents especificados, fluxo definido, contratos documentados</objetivo>
   <razao>Resolver a dependência circular: para criar orquestrador precisa saber os agents, para criar agents precisa saber o orquestrador. O blueprint define TUDO antes de criar QUALQUER artefato.</razao>
-  <resultado_final>Arquivo BLUEPRINT.md em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/ com diagrama ASCII, tabela de agents, contratos de dados e checklist de implementação</resultado_final>
+  <resultado_final>Arquivo BLUEPRINT.md em .claude/blueprints/ com diagrama ASCII, tabela de agents, contratos de dados e checklist de implementação</resultado_final>
 </proposito>
 
 <capacidades>
@@ -115,7 +115,7 @@ allowed-tools: Read Write Bash Glob AskUserQuestion TodoWrite
   |------|-------------------------|
   | 0 | TodoWrite criado |
   | 1 | Usuário aprovou fluxo de etapas |
-  | 2 | Blueprint salvo em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/ |
+  | 2 | Blueprint salvo em .claude/blueprints/ |
 </sinalizadores_formato>
 
 <sufixos_correcao>
@@ -359,13 +359,15 @@ allowed-tools: Read Write Bash Glob AskUserQuestion TodoWrite
       8. **Pedir confirmação:**
          ```
          AskUserQuestion:
-         "Blueprint pronto. Deseja salvar em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/[nome]-BLUEPRINT.md?"
+         "Blueprint pronto. Deseja salvar em .claude/blueprints/[nome]-BLUEPRINT.md?"
          Opções: [Sim, salvar] [Não, ajustar]
          ```
 
       9. **Salvar blueprint:**
          ```
-         $CAMINHO = "${CLAUDE_PLUGIN_ROOT}/spec/blueprints/[nome-sistema]-BLUEPRINT.md"
+         $CAMINHO = ".claude/blueprints/[nome-sistema]-BLUEPRINT.md"
+         # Garantir que o diretório existe (é apagado a cada update do plugin se ficar no cache):
+         mkdir -p .claude/blueprints
          Write: $CAMINHO
          [Conteúdo do blueprint]
          ```
@@ -402,7 +404,7 @@ allowed-tools: Read Write Bash Glob AskUserQuestion TodoWrite
       - [ ] Todos agents especificados (capacidade, categoria, existência)
       - [ ] Diagrama ASCII completo
       - [ ] Tabela de contratos preenchida
-      - [ ] Blueprint salvo em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/
+      - [ ] Blueprint salvo em .claude/blueprints/
     </criterio_conclusao>
 
     <transicao>
@@ -574,7 +576,7 @@ PIPELINE /planejar-sistema - Arquitetura
     ├── Monta: tabela de contratos
     ├── Gera: blueprint completo
     ├── Valida: com usuário
-    └── Salva: em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/
+    └── Salva: em .claude/blueprints/
 
 FLUXO DE DADOS:
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -607,7 +609,7 @@ Antes de iniciar, verificar:
 - [ ] Diagrama ASCII criado?
 - [ ] Tabela de contratos completa?
 - [ ] Preview mostrado ao usuário?
-- [ ] Blueprint salvo em ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/?
+- [ ] Blueprint salvo em .claude/blueprints/?
 </checklist_orquestrador>
 
 <exemplos>
@@ -638,7 +640,7 @@ Verificando agents...
   ✅ embargos-decisao (existe)
   ❌ verificador-fundamentacao (CRIAR)
 
-Blueprint salvo em: ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/pipeline-embargos-BLUEPRINT.md
+Blueprint salvo em: .claude/blueprints/pipeline-embargos-BLUEPRINT.md
 ```
 
 ### Exemplo 2: Sistema Genérico
@@ -669,7 +671,7 @@ Verificando agents...
   ❌ verificador-completude (CRIAR)
   ❌ consolidador-analise (CRIAR)
 
-Blueprint salvo em: ${CLAUDE_PLUGIN_ROOT}/spec/blueprints/pipeline-validacao-contratos-BLUEPRINT.md
+Blueprint salvo em: .claude/blueprints/pipeline-validacao-contratos-BLUEPRINT.md
 ```
 
 </exemplos>
